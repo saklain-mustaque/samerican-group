@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Phone, Mail, MapPin } from 'lucide-react';
-import samericanGroupLogo from '../assets/images/samerican_group.svg';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -137,9 +136,9 @@ export default function Navbar() {
                         className="flex items-center"
                     >
                         <motion.img 
-                            src={samericanGroupLogo} 
+                            src="samerican_group.svg"
                             alt="Samerican Group logo" 
-                            className="h-16 w-auto top-5 relative pr-20"
+                            className="h-35 w-auto top-3 relative pr-20"
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.3 }}
                         />
