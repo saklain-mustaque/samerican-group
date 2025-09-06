@@ -1,19 +1,26 @@
-// Navbar.jsx
+import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Menu, X, ChevronDown, Phone, Mail, MapPin } from 'lucide-react';
+import { useScrollOptimization } from '../hooks/useScrollOptimization';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [industriesOpen, setIndustriesOpen] = useState(false);
+    const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [hoverTimeout, setHoverTimeout] = useState(null);
     const industriesRef = useRef(null);
+    const dropdownRef = useRef(null);
+    const lastScrollY = useRef(0);
+    const { optimizedScrollHandler } = useScrollOptimization();
 
     const activePage = 'Home';
     const topLinks = [
         { icon: <Phone className="w-3 h-3" />, text: '(312) 450 8700', href: 'tel:+13124508700' },
         { icon: <Mail className="w-3 h-3" />, text: 'info@w3global.com', href: 'mailto:info@w3global.com' },
-        { icon: <MapPin className="w-3 h-3" />, text: 'Hyderabad, India', href: '#' },
+        { icon: <MapPin className="w-3 h-3" />, text: 'Hyderbad, Telangana', href: '#' },
     ];
 
     const socialLinks = [
@@ -24,9 +31,8 @@ export default function Navbar() {
     ];
 
     const mainLinks = [
-        'Home',
-        'About',
         'Find a Job',
+        'Employers',
         'Services',
         {
             name: 'Industries',
@@ -36,192 +42,334 @@ export default function Navbar() {
                 'Manufacturing', 'Construction', 'Creative & Digital Marketing', 'Sales & Marketing'
             ]
         },
-        'Our Team',
-        'Resources',
-        'Blog',
+        'About',
         'Contact Us'
     ];
 
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 80);
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+        const handleScroll = ({ scrollY, direction }) => {
+            // Always show navbar (remove hide behavior)
+            setIsVisible(true);
+            
+            // Update scrolled state for background change
+            setScrolled(scrollY > 50);
+            
+            lastScrollY.current = scrollY;
+        };
+        
+        const scrollHandler = () => optimizedScrollHandler(handleScroll);
+        window.addEventListener("scroll", scrollHandler, { passive: true });
+        
+        return () => window.removeEventListener("scroll", scrollHandler);
+    }, [optimizedScrollHandler]);
 
-    // Close industries dropdown when clicking outside
+    // Handle click outside to close dropdown
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (industriesRef.current && !industriesRef.current.contains(event.target)) {
                 setIndustriesOpen(false);
             }
         };
+        
         document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("touchstart", handleClickOutside, { passive: true });
+        
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("touchstart", handleClickOutside);
+        };
     }, []);
+
+    // Clear hover timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (hoverTimeout) {
+                clearTimeout(hoverTimeout);
+            }
+        };
+    }, [hoverTimeout]);
 
     const toggleMobileMenu = () => {
         setIsOpen((prev) => {
             const newState = !prev;
-            if (!newState) setIndustriesOpen(false);
+            if (!newState) {
+                setIndustriesOpen(false);
+                setMobileIndustriesOpen(false);
+            }
             return newState;
         });
     };
 
+    // Handle Industries dropdown with both hover and click support
+    const handleIndustriesMouseEnter = () => {
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+        }
+        setIndustriesOpen(true);
+    };
+
+    const handleIndustriesMouseLeave = () => {
+        const timeout = setTimeout(() => {
+            setIndustriesOpen(false);
+        }, 150); // Small delay to allow moving to dropdown
+        setHoverTimeout(timeout);
+    };
+
+    const handleIndustriesClick = (e) => {
+        e.preventDefault();
+        setIndustriesOpen(!industriesOpen);
+        
+        // Clear any pending hover timeout
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+        }
+    };
+
+    const handleDropdownMouseEnter = () => {
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+        }
+    };
+
+    const handleDropdownMouseLeave = () => {
+        const timeout = setTimeout(() => {
+            setIndustriesOpen(false);
+        }, 150);
+        setHoverTimeout(timeout);
+    };
+
+    const handleMobileIndustriesToggle = () => {
+        setMobileIndustriesOpen(!mobileIndustriesOpen);
+    };
+
+    const handleMobileIndustriesNavigation = () => {
+        // Navigate to industries page on mobile when clicking the text
+        toggleMobileMenu(); // Close mobile menu
+    };
+
     return (
-        <header className="fixed w-full top-0 left-0 z-50">
+        <motion.header 
+            className="fixed w-full top-0 left-0 z-50"
+            initial={{ y: 0 }}
+            animate={{ y: isVisible ? 0 : -100 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
             {/* Top bar */}
-            <motion.div
-                initial={{ y: -50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className={`backdrop-blur-md border-b border-white/10 transition-all duration-500 ${
-                    scrolled ? "bg-gray-900/95 shadow-lg" : "bg-black/80"
-                }`}
-            >
-                <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-12">
+            <div className={`transition-all duration-300 ${
+                scrolled ? "bg-black/90 backdrop-blur-md" : "bg-transparent"
+            }`}>
+                <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-10">
                     {/* Contact Info */}
                     <div className="hidden md:flex items-center space-x-6 text-sm">
                         {topLinks.map((link, idx) => (
-                            <motion.a
+                            <a
                                 key={idx}
                                 href={link.href}
-                                whileHover={{ scale: 1.05, y: -1 }}
-                                className="flex items-center gap-2 text-gray-300 hover:text-red-400 transition-all duration-300 group"
+                                className="flex items-center gap-2 text-white hover:text-red-300 transition-colors duration-200"
                             >
-                                <span className="group-hover:text-red-400 transition-colors duration-300">
-                                    {link.icon}
-                                </span>
+                                {link.icon}
                                 {link.text}
-                            </motion.a>
+                            </a>
                         ))}
                     </div>
 
                     {/* Social Links */}
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2">
                         {socialLinks.map((social, idx) => (
-                            <motion.a
+                            <a
                                 key={idx}
                                 href={social.href}
-                                whileHover={{ scale: 1.2, y: -2 }}
-                                whileTap={{ scale: 0.9 }}
-                                className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-500 transition-all duration-300 group"
+                                className="w-7 h-7 bg-white/20 hover:bg-red-500/80 rounded-full flex items-center justify-center transition-colors duration-200 backdrop-blur-sm"
                                 title={social.name}
                             >
-                                <span className="text-xs group-hover:scale-110 transition-transform duration-300">
-                                    {social.icon}
-                                </span>
-                            </motion.a>
+                                <span className="text-xs">{social.icon}</span>
+                            </a>
                         ))}
                     </div>
                 </div>
-            </motion.div>
+            </div>
 
             {/* Main navbar */}
-            <motion.div
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className={`backdrop-blur-md shadow-lg transition-all duration-500 ${
-                    scrolled 
-                        ? "bg-gradient-to-r from-red-500 to-red-600 shadow-xl" 
-                        : "bg-black/90 shadow-2xl"
-                }`}
-            >
-                <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-18">
+            <div className={`transition-all duration-300 ${
+                scrolled 
+                    ? "bg-black/90 backdrop-blur-md shadow-lg" 
+                    : "bg-transparent"
+            }`}>
+                <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
                     {/* Logo */}
-                    <motion.div 
-                        initial={{ opacity: 0, x: -30 }} 
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                        className="flex items-center"
-                    >
-                        <motion.img 
-                            src="samerican_group.svg"
-                            alt="Samerican Group logo" 
-                            className="h-35 w-auto top-3 relative pr-20"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.3 }}
-                        />
-                    </motion.div>
+                    <Link to="/" className="flex items-center">
+                        <motion.div 
+                            initial={{ opacity: 0, x: -30 }} 
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                            className="flex items-center"
+                        >
+                            <motion.img 
+                                src="samerican_group.svg"
+                                alt="Samerican Group logo" 
+                                className="h-35 w-auto top-3 relative pr-20 cursor-pointer"
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            />
+                        </motion.div>
+                    </Link>
 
                     {/* Desktop nav */}
-                    <nav className="hidden lg:flex items-center space-x-8">
+                    <nav className="hidden lg:flex items-center space-x-6">
                         {mainLinks.map((link, idx) =>
                             typeof link === 'string' ? (
-                                <motion.a
-                                    key={idx}
-                                    href="#"
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: 0.6 + idx * 0.1 }}
-                                    whileHover={{ y: -2 }}
-                                    className={`relative text-white font-medium transition-all duration-300 group ${
-                                        activePage === link ? 'text-orange-300' : 'hover:text-orange-300'
-                                    }`}
-                                >
-                                    {link}
-                                    <motion.div
-                                        className={`absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-orange-400 to-red-400 transition-all duration-300 ${
-                                            activePage === link ? 'w-full' : 'w-0 group-hover:w-full'
+                                link === 'Contact Us' ? (
+                                    <Link
+                                        key={idx}
+                                        to="/contact"
+                                        className={`relative text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 ${
+                                            activePage === link ? 'text-red-100' : ''
                                         }`}
-                                        layoutId={activePage === link ? 'activeNav' : undefined}
-                                    />
-                                </motion.a>
+                                    >
+                                        {link}
+                                        {activePage === link && (
+                                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-200"></div>
+                                        )}
+                                    </Link>
+                                ) : link === 'About' ? (
+                                    <Link
+                                        key={idx}
+                                        to="/about"
+                                        className={`relative text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 ${
+                                            activePage === link ? 'text-red-100' : ''
+                                        }`}
+                                    >
+                                        {link}
+                                        {activePage === link && (
+                                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-200"></div>
+                                        )}
+                                    </Link>
+                                ) : link === 'Services' ? (
+                                    <Link
+                                        key={idx}
+                                        to="/services"
+                                        className={`relative text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 ${
+                                            activePage === link ? 'text-red-100' : ''
+                                        }`}
+                                    >
+                                        {link}
+                                        {activePage === link && (
+                                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-200"></div>
+                                        )}
+                                    </Link>
+                                ) : link === 'Find a Job' ? (
+                                    <Link
+                                        key={idx}
+                                        to="/jobs"
+                                        className={`relative text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 ${
+                                            activePage === link ? 'text-red-100' : ''
+                                        }`}
+                                    >
+                                        {link}
+                                        {activePage === link && (
+                                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-200"></div>
+                                        )}
+                                    </Link>
+                                ) : link === 'Employers' ? (
+                                    <Link
+                                        key={idx}
+                                        to="/employers"
+                                        className={`relative text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 ${
+                                            activePage === link ? 'text-red-100' : ''
+                                        }`}
+                                    >
+                                        {link}
+                                        {activePage === link && (
+                                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-200"></div>
+                                        )}
+                                    </Link>
+                                ) : (
+                                    <a
+                                        key={idx}
+                                        href="#"
+                                        className={`relative text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 ${
+                                            activePage === link ? 'text-red-100' : ''
+                                        }`}
+                                    >
+                                        {link}
+                                        {activePage === link && (
+                                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-200"></div>
+                                        )}
+                                    </a>
+                                )
                             ) : (
                                 <div
                                     key={idx}
                                     ref={industriesRef}
                                     className="relative"
-                                    onMouseEnter={() => setIndustriesOpen(true)}
-                                    onMouseLeave={() => setIndustriesOpen(false)}
+                                    onMouseEnter={handleIndustriesMouseEnter}
+                                    onMouseLeave={handleIndustriesMouseLeave}
                                 >
-                                    <motion.button
-                                        initial={{ opacity: 0, y: -20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.4, delay: 0.6 + idx * 0.1 }}
-                                        whileHover={{ y: -2 }}
-                                        onClick={() => setIndustriesOpen((prev) => !prev)}
-                                        className="flex items-center text-white font-medium hover:text-orange-300 transition-all duration-300 group focus:outline-none"
-                                    >
-                                        {link.name}
-                                        <motion.div
-                                            animate={{ rotate: industriesOpen ? 180 : 0 }}
-                                            transition={{ duration: 0.3 }}
+                                    <div className="flex items-center">
+                                        {/* Industries text - navigates to industries page */}
+                                        <Link
+                                            to="/industries"
+                                            className="text-white font-semibold hover:text-red-200 transition-colors duration-200 py-2 pr-1"
                                         >
-                                            <ChevronDown size={18} className="ml-1 group-hover:text-orange-300" />
-                                        </motion.div>
-                                        <motion.div
-                                            className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-orange-400 to-red-400 transition-all duration-300 w-0 group-hover:w-full"
-                                        />
-                                    </motion.button>
+                                            {link.name}
+                                        </Link>
+                                        
+                                        {/* Dropdown button - toggles dropdown */}
+                                        <button
+                                            onClick={handleIndustriesClick}
+                                            onMouseEnter={handleIndustriesMouseEnter}
+                                            className="text-white font-semibold hover:text-red-200 transition-colors duration-200 focus:outline-none focus:text-red-200 py-2 pl-1"
+                                            aria-expanded={industriesOpen}
+                                            aria-haspopup="true"
+                                            aria-label="Toggle industries dropdown"
+                                        >
+                                            <ChevronDown 
+                                                size={16} 
+                                                className={`transition-transform duration-200 ${
+                                                    industriesOpen ? 'rotate-180' : ''
+                                                }`} 
+                                            />
+                                        </button>
+                                    </div>
 
-                                    <AnimatePresence>
-                                        {industriesOpen && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                transition={{ duration: 0.2 }}
-                                                className="absolute top-full left-0 bg-white/95 backdrop-blur-lg text-gray-800 py-4 shadow-2xl min-w-[280px] rounded-xl border border-white/20 mt-2"
-                                            >
-                                                <div className="grid grid-cols-1 gap-1">
-                                                    {link.subLinks.map((sublink, subIdx) => (
-                                                        <motion.a
-                                                            key={subIdx}
-                                                            href="#"
-                                                            initial={{ opacity: 0, x: -20 }}
-                                                            animate={{ opacity: 1, x: 0 }}
-                                                            transition={{ duration: 0.3, delay: subIdx * 0.05 }}
-                                                            whileHover={{ x: 5, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                                                            className="block px-6 py-3 text-sm hover:text-red-600 transition-all duration-200 rounded-lg mx-2"
-                                                        >
-                                                            {sublink}
-                                                        </motion.a>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    {/* Dropdown Menu */}
+                                    {industriesOpen && (
+                                        <div 
+                                            ref={dropdownRef}
+                                            className="absolute top-full left-0 bg-white/95 backdrop-blur-sm text-gray-800 py-2 shadow-xl min-w-[280px] rounded-lg border mt-1 z-50"
+                                            onMouseEnter={handleDropdownMouseEnter}
+                                            onMouseLeave={handleDropdownMouseLeave}
+                                        >
+                                            {link.subLinks.map((sublink, subIdx) => {
+                                                // Convert navbar link text to industry ID
+                                                let industryId = sublink.toLowerCase()
+                                                    .replace(/\s+/g, '-')
+                                                    .replace(/&/g, '')
+                                                    .replace(/\s*-\s*/g, '-');
+                                                
+                                                // Handle special cases
+                                                if (sublink === 'Creative & Digital Marketing') {
+                                                    industryId = 'creative--digital-marketing';
+                                                } else if (sublink === 'Sales & Marketing') {
+                                                    industryId = 'sales--marketing';
+                                                }
+                                                
+                                                return (
+                                                    <Link
+                                                        key={subIdx}
+                                                        to={`/industries/${industryId}`}
+                                                        className="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors duration-150 focus:bg-red-50 focus:text-red-600 focus:outline-none"
+                                                        onClick={() => setIndustriesOpen(false)}
+                                                    >
+                                                        {sublink}
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
                             )
                         )}
@@ -229,143 +377,176 @@ export default function Navbar() {
 
                     {/* CTA Button */}
                     <div className="hidden lg:block">
-                        <motion.button
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.8 }}
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-white/20 backdrop-blur-sm text-white px-6 py-2.5 rounded-full font-semibold hover:bg-white/30 transition-all duration-300 border border-white/20"
+                        <Link 
+                            to="/contact"
+                            className="bg-red-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-red-500 transition-colors duration-200 border border-white/20"
                         >
                             Get Started
-                        </motion.button>
+                        </Link>
                     </div>
 
                     {/* Mobile menu button */}
-                    <motion.button
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.8 }}
+                    <button
                         className="lg:hidden text-white p-2"
                         onClick={toggleMobileMenu}
-                        whileTap={{ scale: 0.9 }}
                         aria-label={isOpen ? "Close menu" : "Open menu"}
                     >
-                        <AnimatePresence mode="wait">
-                            {isOpen ? (
-                                <motion.div
-                                    key="close"
-                                    initial={{ rotate: -90, opacity: 0 }}
-                                    animate={{ rotate: 0, opacity: 1 }}
-                                    exit={{ rotate: 90, opacity: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    <X size={24} />
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="menu"
-                                    initial={{ rotate: 90, opacity: 0 }}
-                                    animate={{ rotate: 0, opacity: 1 }}
-                                    exit={{ rotate: -90, opacity: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    <Menu size={24} />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.button>
+                        {isOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
                 </div>
-            </motion.div>
+            </div>
 
             {/* Mobile nav */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.nav
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="lg:hidden bg-black/95 backdrop-blur-lg text-white shadow-2xl border-t border-white/10"
-                    >
-                        <div className="max-h-[80vh] overflow-y-auto">
-                            {mainLinks.map((link, idx) =>
-                                typeof link === 'string' ? (
-                                    <motion.a
-                                        key={idx}
-                                        href="#"
-                                        initial={{ opacity: 0, x: -30 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ duration: 0.3, delay: idx * 0.05 }}
-                                        whileHover={{ x: 10, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                                        className="block px-6 py-4 hover:bg-red-500/10 transition-all duration-200 border-b border-white/5"
+            <motion.nav 
+                className={`lg:hidden bg-red-600/95 backdrop-blur-md text-white shadow-lg transition-all duration-300 ${
+                    isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                }`}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ 
+                    opacity: isOpen ? 1 : 0, 
+                    height: isOpen ? "auto" : 0
+                }}
+                transition={{ duration: 0.3 }}
+            >
+                <div className="max-h-[70vh] overflow-y-auto">
+                    {mainLinks.map((link, idx) =>
+                        typeof link === 'string' ? (
+                            link === 'Contact Us' ? (
+                                <Link
+                                    key={idx}
+                                    to="/contact"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                    onClick={toggleMobileMenu}
+                                >
+                                    {link}
+                                </Link>
+                            ) : link === 'About' ? (
+                                <Link
+                                    key={idx}
+                                    to="/about"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                    onClick={toggleMobileMenu}
+                                >
+                                    {link}
+                                </Link>
+                            ) : link === 'Home' ? (
+                                <Link
+                                    key={idx}
+                                    to="/"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                    onClick={toggleMobileMenu}
+                                >
+                                    {link}
+                                </Link>
+                            ) : link === 'Services' ? (
+                                <Link
+                                    key={idx}
+                                    to="/services"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                    onClick={toggleMobileMenu}
+                                >
+                                    {link}
+                                </Link>
+                            ) : link === 'Find a Job' ? (
+                                <Link
+                                    key={idx}
+                                    to="/jobs"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                    onClick={toggleMobileMenu}
+                                >
+                                    {link}
+                                </Link>
+                            ) : link === 'Employers' ? (
+                                <Link
+                                    key={idx}
+                                    to="/employers"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                    onClick={toggleMobileMenu}
+                                >
+                                    {link}
+                                </Link>
+                            ) : (
+                                <a
+                                    key={idx}
+                                    href="#"
+                                    className="block px-4 py-3 hover:bg-red-700 transition-colors duration-150 border-b border-red-500"
+                                >
+                                    {link}
+                                </a>
+                            )
+                        ) : (
+                            <div key={idx} className="border-b border-red-500">
+                                <div className="flex items-center">
+                                    {/* Industries text - navigates to industries page */}
+                                    <Link
+                                        to="/industries"
+                                        className="flex-1 px-4 py-3 hover:bg-red-700 transition-colors duration-150"
+                                        onClick={handleMobileIndustriesNavigation}
                                     >
-                                        {link}
-                                    </motion.a>
-                                ) : (
-                                    <motion.div 
-                                        key={idx}
-                                        initial={{ opacity: 0, x: -30 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ duration: 0.3, delay: idx * 0.05 }}
-                                        className="border-b border-white/5"
+                                        {link.name}
+                                    </Link>
+                                    
+                                    {/* Dropdown toggle button */}
+                                    <button
+                                        className="px-4 py-3 hover:bg-red-700 transition-colors duration-150 focus:outline-none focus:bg-red-700"
+                                        onClick={handleMobileIndustriesToggle}
+                                        aria-expanded={mobileIndustriesOpen}
+                                        aria-label="Toggle industries submenu"
                                     >
-                                        <button
-                                            onClick={() => setIndustriesOpen((prev) => !prev)}
-                                            className="w-full flex justify-between items-center px-6 py-4 hover:bg-red-500/10 transition-all duration-200"
-                                        >
-                                            {link.name}
-                                            <motion.div
-                                                animate={{ rotate: industriesOpen ? 180 : 0 }}
-                                                transition={{ duration: 0.3 }}
-                                            >
-                                                <ChevronDown size={16} />
-                                            </motion.div>
-                                        </button>
-                                        <AnimatePresence>
-                                            {industriesOpen && (
-                                                <motion.div
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                    transition={{ duration: 0.3 }}
-                                                    className="bg-black/50 overflow-hidden"
+                                        <ChevronDown 
+                                            size={16} 
+                                            className={`transition-transform duration-200 ${
+                                                mobileIndustriesOpen ? 'rotate-180' : ''
+                                            }`}
+                                        />
+                                    </button>
+                                </div>
+                                
+                                {/* Mobile Submenu */}
+                                {mobileIndustriesOpen && (
+                                    <div className="bg-red-700">
+                                        {link.subLinks.map((sublink, subIdx) => {
+                                            // Convert navbar link text to industry ID
+                                            let industryId = sublink.toLowerCase()
+                                                .replace(/\s+/g, '-')
+                                                .replace(/&/g, '')
+                                                .replace(/\s*-\s*/g, '-');
+                                            
+                                            // Handle special cases
+                                            if (sublink === 'Creative & Digital Marketing') {
+                                                industryId = 'creative--digital-marketing';
+                                            } else if (sublink === 'Sales & Marketing') {
+                                                industryId = 'sales--marketing';
+                                            }
+                                            
+                                            return (
+                                                <Link
+                                                    key={subIdx}
+                                                    to={`/industries/${industryId}`}
+                                                    className="block px-8 py-2 text-sm hover:bg-red-800 transition-colors duration-150 focus:bg-red-800 focus:outline-none"
+                                                    onClick={toggleMobileMenu}
                                                 >
-                                                    {link.subLinks.map((sublink, subIdx) => (
-                                                        <motion.a
-                                                            key={subIdx}
-                                                            href="#"
-                                                            initial={{ opacity: 0, x: -20 }}
-                                                            animate={{ opacity: 1, x: 0 }}
-                                                            transition={{ duration: 0.2, delay: subIdx * 0.03 }}
-                                                            whileHover={{ x: 15, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                                                            className="block px-12 py-3 text-sm text-gray-300 hover:text-white transition-all duration-200"
-                                                        >
-                                                            {sublink}
-                                                        </motion.a>
-                                                    ))}
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-                                )
-                            )}
-                            
-                            {/* Mobile CTA */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: 0.5 }}
-                                className="p-6"
-                            >
-                                <button className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300">
-                                    Get Started
-                                </button>
-                            </motion.div>
-                        </div>
-                    </motion.nav>
-                )}
-            </AnimatePresence>
-        </header>
+                                                    {sublink}
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    )}
+                    
+                    <div className="p-4">
+                        <Link 
+                            to="/contact"
+                            className="w-full bg-white text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-red-50 transition-colors duration-200 block text-center"
+                            onClick={toggleMobileMenu}
+                        >
+                            Get Started
+                        </Link>
+                    </div>
+                </div>
+            </motion.nav>
+        </motion.header>
     );
 }

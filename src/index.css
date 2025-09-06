@@ -1,4 +1,349 @@
 @import "tailwindcss";
 
-html, body, #root { height: 100%; }
-body { @apply bg-gray-50 text-gray-900; }
+/* Enhanced smooth scrolling and performance optimizations */
+:root {
+  /* Smooth scrolling behavior */
+  scroll-behavior: smooth;
+}
+
+/* Optimize scrolling performance */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+body { 
+  @apply bg-gray-50 text-gray-900;
+  /* Prevent text selection during scroll on mobile */
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* Smooth scrolling for all scrollable containers */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Mobile device detected */
+  html, body {
+    /* Enable momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Improve touch scrolling performance */
+    overflow-scrolling: touch;
+  }
+  
+  body {
+    /* Prevent rubber band effect but maintain smooth scrolling */
+    overscroll-behavior: contain;
+    /* Optimize for mobile rendering */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Optimize touch interactions */
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-focus-ring-color: transparent;
+    /* Reduce complexity of transforms on mobile */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Disable hover effects on mobile */
+  .hover\:scale-105:hover {
+    transform: none;
+  }
+  
+  /* Optimize animations for mobile */
+  @media (prefers-reduced-motion: no-preference) {
+    .framer-motion-element {
+      animation-duration: 0.2s !important;
+      transition-duration: 0.2s !important;
+    }
+  }
+}
+
+/* Performance optimizations for animations and transforms */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-scroll {
+  will-change: scroll-position;
+}
+
+/* Optimize Framer Motion animations */
+.framer-motion-element {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* Prevent flash of unstyled content */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Optimize image rendering */
+img {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input, textarea, select {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Hero styling inspired by Swoon Staffing */
+.hero {
+  color: #FFF;
+  position: relative;
+  background-color: #292929;
+  padding-bottom: 12px;
+  min-height: 400px;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 550px;
+    height: 50vw;
+    background-color: transparent;
+    padding-bottom: 0;
+    max-height: 700px;
+  }
+}
+
+
+
+.hero:before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(242, 108, 57, 0.5) 0%, rgba(0, 212, 255, 0.05) 50%);
+}
+
+.hero-img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  .hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  .hero-img {
+    min-height: 200px;
+    position: relative;
+  }
+}
+
+.hero-content {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  z-index: 2;
+  padding: 0 1rem;
+}
+
+.hero-content:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+@media (max-width: 1023.98px) {
+  .hero-content {
+    background: #292929;
+    align-items: center;
+  }
+  .hero-content .content-wrapper {
+    padding: 36px 12px;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .hero-content .content-wrapper {
+    margin: 20px;
+    padding: 0 2rem 18% 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+.hero__buttons {
+  margin-top: 35px;
+}
+
+@media (min-width: 768px) {
+  .hero__buttons {
+    margin-top: 45px;
+  }
+}
+
+.hero-title {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title {
+    font-size: 3.5rem;
+  }
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+.hero-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.39);
+}
+
+.hero-btn:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(220, 38, 38, 0.49);
+}
+
+@media (min-width: 768px) {
+  .hero-btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Page-specific hero variations */
+
+@media (max-width: 1023.98px) {
+  .hero-home .hero-content .content-wrapper {
+    padding: 24px 12px;
+  }
+}
+
+/* Employers page - special layout for complex content */
+.hero-employers {
+  min-height: 500px;
+}
+
+@media (min-width: 1024px) {
+  .hero-employers {
+    min-height: 600px;
+    height: 55vw;
+    max-height: 750px;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  .hero-employers .hero-content {
+    align-items: stretch;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .hero-employers .hero-content .content-wrapper {
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-employers .hero-content .content-wrapper {
+    padding: 0 2rem 12% 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+}

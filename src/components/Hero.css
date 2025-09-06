@@ -1,0 +1,187 @@
+/* Hero styling inspired by Swoon Staffing */
+.hero {
+  color: #FFF;
+  position: relative;
+  background-color: #292929;
+  padding-bottom: 12px;
+  min-height: 400px;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 550px;
+    height: 50vw;
+    background-color: transparent;
+    padding-bottom: 0;
+    max-height: 700px;
+  }
+}
+
+.hero p,
+.hero h1,
+.hero .h1 {
+  max-width: 650px;
+}
+
+.hero:before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(242, 108, 57, 0.5) 0%, rgba(0, 212, 255, 0.05) 50%);
+}
+
+.hero-img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  .hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  .hero-img {
+    min-height: 200px;
+    position: relative;
+  }
+}
+
+.hero-content {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  z-index: 2;
+  padding: 0 1rem;
+}
+
+.hero-content:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+@media (max-width: 1023.98px) {
+  .hero-content {
+    background: #292929;
+    align-items: center;
+  }
+  .hero-content .content-wrapper {
+    padding: 36px 12px;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .hero-content .content-wrapper {
+    padding: 0 2rem 18% 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+.hero__buttons {
+  margin-top: 35px;
+}
+
+@media (min-width: 768px) {
+  .hero__buttons {
+    margin-top: 45px;
+  }
+}
+
+.hero-title {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title {
+    font-size: 3.5rem;
+  }
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+.hero-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.39);
+}
+
+.hero-btn:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(220, 38, 38, 0.49);
+}
+
+@media (min-width: 768px) {
+  .hero-btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+  }
+}
