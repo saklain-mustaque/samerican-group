@@ -58,8 +58,8 @@ export const FooterContent = () => {
               <h3 className="text-white font-semibold mb-2 flex items-center justify-center gap-2">
                 <span className="text-red-400">✉️</span> Email Us
               </h3>
-              <a href="mailto:info@w3global.com" className="text-red-400 hover:text-red-300 transition-colors duration-300">
-                info@w3global.com
+              <a href="mailto:info@samerican-group.com" className="text-red-400 hover:text-red-300 transition-colors duration-300">
+                info@samerican-grouop.com
               </a>
             </AnimatedSection>
 
@@ -96,7 +96,7 @@ export const FooterContent = () => {
           <div className="mt-12 pt-8 border-t border-gray-700 text-center space-y-4">
             <AnimatedSection variant="fadeInUp" delay={0.4}>
               <p className="text-gray-500 text-sm">
-                Copyright © 2025 W3Global. All Rights Reserved
+                Copyright © 2025 Samerican Group. All Rights Reserved
               </p>
             </AnimatedSection>
           </div>

@@ -19,7 +19,7 @@ export default function Navbar() {
     const activePage = 'Home';
     const topLinks = [
         { icon: <Phone className="w-3 h-3" />, text: '(312) 450 8700', href: 'tel:+13124508700' },
-        { icon: <Mail className="w-3 h-3" />, text: 'info@w3global.com', href: 'mailto:info@w3global.com' },
+        { icon: <Mail className="w-3 h-3" />, text: 'info@samerican-group.com', href: 'mailto:info@samerican-group.com' },
         { icon: <MapPin className="w-3 h-3" />, text: 'Hyderbad, Telangana', href: '#' },
     ];
 
@@ -161,20 +161,9 @@ export default function Navbar() {
             <div className={`transition-all duration-300 ${
                 scrolled ? "bg-black/90 backdrop-blur-md" : "bg-transparent"
             }`}>
-                <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-10">
+                <div className="max-w-7xl mx-auto px-4 flex justify-end items-center h-10">
                     {/* Contact Info */}
-                    <div className="hidden md:flex items-center space-x-6 text-sm">
-                        {topLinks.map((link, idx) => (
-                            <a
-                                key={idx}
-                                href={link.href}
-                                className="flex items-center gap-2 text-white hover:text-red-300 transition-colors duration-200"
-                            >
-                                {link.icon}
-                                {link.text}
-                            </a>
-                        ))}
-                    </div>
+                    
 
                     {/* Social Links */}
                     <div className="flex items-center space-x-2">

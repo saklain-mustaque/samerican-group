@@ -35,8 +35,9 @@ export default function Industries() {
         title="Industries We Serve"
         subtitle="Specialized staffing solutions across diverse sectors"
         description="The satisfaction of employers and job seekers is our top priority. We maintain transparency and provide personal care to ensure the right talent meets the right opportunity at every stage of the hiring cycle."
-        backgroundImage="/api/placeholder/1920/600"
+        backgroundImage="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1950&q=80"
         showButtons={false}
+        className="hero-industries"
       />
 
       {/* Action Buttons Section */}

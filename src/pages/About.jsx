@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import Hero from '../components/Hero';
 import { 
   Users, 
   Award, 
@@ -11,48 +12,18 @@ import {
 } from 'lucide-react';
 
 const AboutPage = () => {
+  const heroProps = {
+    title: "About Samerican Group",
+    subtitle: "Connecting exceptional talent with innovative companies worldwide since 2008",
+    backgroundImage: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1950&q=80",
+    showButtons: true,
+    className: "hero-about"
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] sm:h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Desktop Image */}
-        <img 
-          className="hidden sm:block absolute inset-0 w-full h-full object-cover object-center" 
-          src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1950&q=80" 
-          alt="Team collaboration" 
-        />
-        {/* Mobile Image - Better cropped for mobile */}
-        <img 
-          className="sm:hidden absolute inset-0 w-full h-full object-cover object-center" 
-          src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&h=1200&q=80" 
-          alt="Team collaboration" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 sm:bg-gradient-to-r sm:from-black/60 sm:via-black/40 sm:to-black/60"></div>
-        
-        <motion.div
-          className="relative z-10 text-center text-white max-w-4xl px-6 py-8"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            About 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
-              {" "}Samerican Group
-            </span>
-          </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-8 text-gray-200 leading-relaxed">
-            Connecting exceptional talent with innovative companies worldwide since 2008
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-lg shadow-lg transition-all duration-300 text-sm sm:text-base"
-          >
-            Learn More About Us
-          </motion.button>
-        </motion.div>
-      </section>
+      <Hero {...heroProps} />
 
       {/* Stats Section */}
       <section className="py-16 bg-gray-50">

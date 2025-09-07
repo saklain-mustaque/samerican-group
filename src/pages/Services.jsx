@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Hero from '../components/Hero';
 import { 
   Users, 
   Search, 
@@ -15,6 +16,14 @@ import {
 } from 'lucide-react';
 
 const ServicesPage = () => {
+  const heroProps = {
+    title: "Our Services",
+    subtitle: "Comprehensive talent solutions tailored to your business needs",
+    backgroundImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1950&q=80",
+    showButtons: true,
+    className: "hero-services"
+  };
+
   const services = [
     {
       icon: <Search className="w-12 h-12" />,
@@ -66,37 +75,7 @@ const ServicesPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center bg-cover bg-center">
-        <img 
-          className="absolute inset-0 w-full h-full object-cover" 
-          src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1950&q=80" 
-          alt="Our Services" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60"></div>
-        
-        <motion.div
-          className="relative z-10 text-center text-white max-w-4xl px-4"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Our 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
-              {" "}Services
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-200">
-            Comprehensive talent solutions tailored to your business needs
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-all duration-300"
-          >
-            Explore Our Solutions
-          </motion.button>
-        </motion.div>
-      </section>
+      <Hero {...heroProps} />
 
       {/* Services Grid */}
       <section className="py-20 bg-gray-50">
