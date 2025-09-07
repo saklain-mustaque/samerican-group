@@ -11,13 +11,11 @@ import IndustryDetail from './pages/IndustryDetail';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import BackToTop from './components/BackToTop';
-import ScrollPerformanceMonitor from './components/ScrollPerformanceMonitor';
 
 export default function App() {
     return (
         <div className="min-h-screen flex flex-col will-change-scroll">
             <ScrollToTop />
-            <ScrollPerformanceMonitor enableLogging={process.env.NODE_ENV === 'development'} />
             <Navbar />
             <main className="flex-1 will-change-transform">
                 <Routes>
