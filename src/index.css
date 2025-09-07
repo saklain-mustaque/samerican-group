@@ -366,7 +366,6 @@ button, a, input, textarea, select {
 
 @media (min-width: 1024px) {
   .hero-employers .hero-content .content-wrapper {
-    padding: 0 2rem 12% 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
