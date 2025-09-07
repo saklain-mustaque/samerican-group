@@ -71,12 +71,12 @@ export default function JobCard({ job, onViewDetails }) {
           {job.industry}
         </span>
         <div className="flex gap-2">
-          <button
+          {/* <button
             onClick={() => onViewDetails(job)}
             className="text-red-600 hover:text-red-800 font-semibold text-sm border border-red-600 hover:border-red-800 px-4 py-2 rounded-lg transition-colors"
           >
             View Details
-          </button>
+          </button> */}
           <button className="bg-red-600 text-white hover:bg-red-700 font-semibold text-sm px-4 py-2 rounded-lg transition-colors">
             Quick Apply
           </button>

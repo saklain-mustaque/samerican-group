@@ -1,10 +1,24 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, MapPin, ArrowRight, Briefcase, Users, TrendingUp, Star } from "lucide-react";
 import { AnimatedSection, FloatingElement } from "./AnimationUtils";
 import FeatureList from "./FeatureList";
 
 export const HeroContent = ({ activeTab, jobSeekerFeatures, employerFeatures }) => {
+
+	const [keyword, setKeyword] = useState("");
+	const [location, setLocation] = useState("");
+	const navigate = useNavigate();
+
+	const handleSearch = () => {
+		if (!keyword.trim()) {
+			alert("Please enter a job title or keyword.");
+			return;
+		}
+		// Navigate with query params (optional)
+		navigate(`/jobs?keyword=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}`);
+	};
 	return (
 		<>
 			{activeTab === "jobseekers" && (
@@ -31,30 +45,38 @@ export const HeroContent = ({ activeTab, jobSeekerFeatures, employerFeatures }) 
 							{/* Search Form */}
 							<div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-white/20 mb-8">
 								<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+									{/* Keyword Input */}
 									<div className="relative">
 										<Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
 										<input
 											type="text"
+											value={keyword}
+											onChange={(e) => setKeyword(e.target.value)}
 											placeholder="Job title, Keywords"
 											className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-gray-700"
 										/>
 									</div>
+
+									{/* Location Input */}
 									<div className="relative">
 										<MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
 										<input
 											type="text"
+											value={location}
+											onChange={(e) => setLocation(e.target.value)}
 											placeholder="City, State (Ex: Dallas, TX) or State or ZIP"
 											className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-gray-700"
 										/>
 									</div>
-									<Link
-										to="/jobs"
-										className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
-										role="button"
+
+									{/* Search Button */}
+									<button
+										onClick={handleSearch}
+										className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
 									>
 										<Search className="w-5 h-5" />
 										Find Jobs
-									</Link>
+									</button>
 								</div>
 							</div>
 						</AnimatedSection>
