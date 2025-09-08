@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Hero from '../components/Hero';
 import { 
   Building2, 
@@ -8,7 +8,6 @@ import {
   Target, 
   Clock,
   CheckCircle,
-  TrendingUp,
   Shield,
   Award,
   Search,
@@ -32,6 +31,7 @@ const EmployersPage = () => {
   });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,64 +63,67 @@ const EmployersPage = () => {
   const closeModal = () => {
     setShowSuccessModal(false);
   };
+
+  const heroProps = {
+    title: "Right Match. On Time. Within Budget.",
+    subtitle: "We Make Hiring Easy with AI-Powered Technology",
+    description: "Every hour, someone is hired through Samerican Group. Experience faster submittals with over 5 million vetted candidate profiles and seasoned recruiters who understand your budget.",
+    backgroundImage: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1950&q=80",
+    showButtons: true,
+    marginTop: 'mt-50'
+  };
   return (
     <div className="min-h-screen">
-      <section className="hero hero-employers">
-        <img 
-          className="hero-img hidden lg:block" 
-          src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1950&q=80" 
-          alt="Professional business meeting" 
-        />
-        <img 
-          className="hero-img lg:hidden" 
-          src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=800&h=1200&q=80" 
-          alt="Professional business meeting" 
-        />
+      {/* Hero Section using consistent Hero component */}
+      <Hero {...heroProps} />
 
-        <div className="hero-content">
-          <div className="content-wrapper flex flex-col lg:flex-row items-center justify-between gap-8 w-full max-w-7xl mx-auto">
+      {/* Contact Form Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 to-black">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
             <motion.div
-              className="text-white max-w-2xl text-center lg:text-left flex-1"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-white"
             >
-              <h1 className="hero-title text-white mb-6 leading-tight">
-                Right Match.
-                <br />On Time.
-                <br />Within budget.
-              </h1>
+              <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Hiring Process?</h2>
+              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+                Join hundreds of companies who trust Samerican Group to find their perfect candidates. 
+                Our proven process delivers results faster than traditional recruiting methods.
+              </p>
               
               <div className="space-y-4 mb-8">
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-base sm:text-lg text-gray-200">AI-Powered technology through a robust & proven screening process</span>
+                  <span className="text-lg text-gray-200">AI-Powered technology through a robust & proven screening process</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-base sm:text-lg text-gray-200">Faster submittals with the help of over 5 million vetted candidate profiles</span>
+                  <span className="text-lg text-gray-200">Faster submittals with the help of over 5 million vetted candidate profiles</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-base sm:text-lg text-gray-200">Seasoned Recruiters who understand the client's budget</span>
+                  <span className="text-lg text-gray-200">Seasoned Recruiters who understand the client's budget</span>
                 </div>
               </div>
               
-              <div className="text-center bg-gradient-to-r from-green-400/20 to-green-500/20 p-6 rounded-xl backdrop-blur-sm border border-green-400/30">
-                <div className="text-xl sm:text-2xl font-bold text-green-400 mb-2">Every hour,</div>
-                <div className="text-lg sm:text-xl text-green-300">someone is hired through Samerican Group</div>
+              <div className="bg-gradient-to-r from-green-400/20 to-green-500/20 p-6 rounded-xl backdrop-blur-sm border border-green-400/30">
+                <div className="text-2xl font-bold text-green-400 mb-2">Every hour,</div>
+                <div className="text-xl text-green-300">someone is hired through Samerican Group</div>
               </div>
             </motion.div>
 
             {/* Right Contact Form */}
             <motion.div
-              className="hidden lg:block flex-shrink-0"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.3 }}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
             >
-              <div className="bg-gray-900/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-700/50 w-80">
+              <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-700/50">
                 <h3 className="text-white text-2xl font-bold mb-6 text-center">We Make Hiring Easy</h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -177,7 +180,7 @@ const EmployersPage = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? 'Submitting...' : 'Get Started'}
                   </button>
@@ -185,90 +188,6 @@ const EmployersPage = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Mobile Contact Form Section */}
-      <section className="lg:hidden py-20 bg-gradient-to-br from-gray-900 to-black">
-        <div className="max-w-lg mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-8"
-          >
-            <h2 className="text-3xl font-bold text-white mb-4">We Make Hiring Easy</h2>
-            <p className="text-gray-300">Get started with your hiring needs today</p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-700/50"
-          >
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all duration-300"
-              />
-              
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all duration-300"
-              />
-              
-              <input
-                type="email"
-                name="email"
-                placeholder="Email ID"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all duration-300"
-              />
-              
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all duration-300"
-              />
-              
-              <input
-                type="text"
-                name="company"
-                placeholder="Company Name"
-                value={formData.company}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all duration-300"
-              />
-              
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? 'Submitting...' : 'Get Started'}
-              </button>
-            </form>
-          </motion.div>
         </div>
       </section>
 
@@ -731,9 +650,10 @@ const EmployersPage = () => {
                 Get Started Today
               </motion.button>
               <motion.button
+                onClick={() => navigate('/contact#contact-form')}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300"
+                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300 cursor-pointer"
               >
                 Schedule a Call
               </motion.button>

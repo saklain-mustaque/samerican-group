@@ -54,6 +54,7 @@ const Hero = ({
   showVideo = false,
   industryId = null,
   className = "",
+  marginTop = "mt-80",
   variant = "default" // default, minimal, dynamic
 }) => {
 
@@ -66,7 +67,7 @@ const Hero = ({
       return industryBackgrounds[industryId];
     }
     // Default high-quality business background
-    return "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=80";
+    return "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=2000&q=80";
   };
 
   const bgImage = getBackgroundImage();
@@ -133,7 +134,7 @@ const Hero = ({
       <div className="relative z-10 w-full">
         <div className="container mx-auto px-6 lg:px-8">
           <motion.div
-            className="max-w-4xl mx-auto text-center lg:text-left mt-50"
+            className={`max-w-4xl mx-auto text-center lg:text-left ${marginTop}`}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
