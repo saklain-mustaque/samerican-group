@@ -143,7 +143,7 @@ export default function EnhancedHomepageCards() {
   ];
 
   return (
-    <section className="relative py-24 bg-gradient-to-br from-gray-50 via-blue-50/50 to-indigo-50/30 overflow-hidden">
+    <section className="relative py-12 bg-gradient-to-br from-gray-50 via-blue-50/50 to-indigo-50/30 overflow-hidden">
       {/* Enhanced background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>

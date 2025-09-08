@@ -81,7 +81,7 @@ export default function HomeSection() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+      <section className="pt-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-50 via-white to-red-50 opacity-50"></div>
         <div className="container mx-auto max-w-6xl px-4 relative">
           <AnimatedSection variant="fadeInUp" className="text-center mb-8">
@@ -96,7 +96,7 @@ export default function HomeSection() {
       </section>
 
       {/* Clients Section */}
-      <section className="py-20 bg-white relative overflow-hidden">
+      <section className="bg-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-50 via-white to-red-50"></div>
         <div className="container mx-auto max-w-6xl px-4 relative">
           <AnimatedSection variant="fadeInUp" className="text-center mb-16">
