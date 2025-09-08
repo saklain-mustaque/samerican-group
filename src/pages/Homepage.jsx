@@ -1,11 +1,12 @@
-// Homepage.jsx
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Users, Cpu, Globe, Star, TrendingUp, Shield } from 'lucide-react';
-import card1 from '../assets/images/card1.png';
-import card2 from '../assets/images/card2.png';
-import card3 from '../assets/images/card3.png';
+import { motion } from 'framer-motion';
+import { 
+  ArrowRight, Users, Cpu, Globe, Star, TrendingUp, Shield, 
+  CheckCircle, Award, Zap, Target, Heart, Sparkles 
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Custom intersection observer hook for better performance
+// Enhanced intersection observer hook
 function useInView(options = {}) {
   const [inView, setInView] = useState(false);
   const ref = useRef();
@@ -32,222 +33,367 @@ function useInView(options = {}) {
   return [ref, inView];
 }
 
-export default function HomepageCards() {
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.2,
+      staggerChildren: 0.15
+    }
+  }
+};
+
+const cardVariants = {
+  hidden: { 
+    opacity: 0, 
+    y: 50,
+    scale: 0.9
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.6, -0.05, 0.01, 0.99]
+    }
+  }
+};
+
+export default function EnhancedHomepageCards() {
   const [headerRef, headerInView] = useInView();
+  const [servicesRef, servicesInView] = useInView();
   const [ctaRef, ctaInView] = useInView();
   const [metricsRef, metricsInView] = useInView();
 
-  const cards = [
+  // Enhanced service cards with better visual hierarchy
+  const services = [
     {
+      id: 'staffing',
       title: 'Staffing Solutions',
-      subtitle: 'Talent Acquisition',
-      description: 'We connect top talent with leading companies, ensuring the perfect match every time through our comprehensive screening process.',
-      img: card1,
-      icon: <Users className="w-6 h-6" />,
-      features: ['Expert Screening', 'Quick Turnaround', 'Quality Assurance'],
-      gradient: 'from-blue-500 to-blue-600',
-      stats: '2000+ Placements'
+      subtitle: 'Talent Acquisition Excellence',
+      description: 'We connect exceptional talent with leading companies through our comprehensive screening process and deep industry expertise.',
+      icon: <Users className="w-8 h-8" />,
+      features: ['Expert Screening', 'Quick Turnaround', 'Quality Assurance', 'Cultural Fit Assessment'],
+      gradient: 'from-blue-500 via-blue-600 to-indigo-700',
+      accentColor: 'blue',
+      stats: '2000+ Placements',
+      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80',
+      ctaText: 'Find Talent',
+      link: '/employers'
     },
     {
+      id: 'consulting',
       title: 'IT Consulting',
       subtitle: 'Technology Excellence',
-      description: 'Delivering innovative IT strategies to help your business thrive in the digital age with cutting-edge solutions.',
-      img: card2,
-      icon: <Cpu className="w-6 h-6" />,
-      features: ['Digital Transformation', 'Cloud Solutions', 'Tech Strategy'],
-      gradient: 'from-purple-500 to-purple-600',
-      stats: '500+ Projects'
+      description: 'Delivering innovative IT strategies and solutions to help your business thrive in the digital transformation era.',
+      icon: <Cpu className="w-8 h-8" />,
+      features: ['Digital Transformation', 'Cloud Solutions', 'Tech Strategy', 'System Integration'],
+      gradient: 'from-purple-500 via-purple-600 to-pink-700',
+      accentColor: 'purple',
+      stats: '500+ Projects',
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1950&q=80',
+      ctaText: 'Learn More',
+      link: '/services'
     },
     {
+      id: 'global',
       title: 'Global Recruitment',
       subtitle: 'Worldwide Network',
-      description: 'Our network spans continents, sourcing the best professionals worldwide with local expertise and global reach.',
-      img: card3,
-      icon: <Globe className="w-6 h-6" />,
-      features: ['Global Reach', 'Local Expertise', 'Cultural Fit'],
-      gradient: 'from-green-500 to-green-600',
-      stats: '50+ Countries'
+      description: 'Our international network spans continents, sourcing the best professionals worldwide with local expertise and global reach.',
+      icon: <Globe className="w-8 h-8" />,
+      features: ['Global Reach', 'Local Expertise', 'Cultural Fit', 'Multi-language Support'],
+      gradient: 'from-emerald-500 via-green-600 to-teal-700',
+      accentColor: 'emerald',
+      stats: '50+ Countries',
+      image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1950&q=80',
+      ctaText: 'Explore Global',
+      link: '/about'
+    }
+  ];
+
+  // Enhanced metrics with icons
+  const metrics = [
+    { 
+      number: "98%", 
+      label: "Client Satisfaction", 
+      icon: <Star className="w-6 h-6 text-yellow-500" />,
+      description: "Consistently exceeding expectations"
+    },
+    // { 
+    //   number: "2.5K+", 
+    //   label: "Successful Placements", 
+    //   icon: <Target className="w-6 h-6 text-green-500" />,
+    //   description: "Perfect matches made"
+    // },
+    { 
+      number: "50+", 
+      label: "Countries Served", 
+      icon: <Globe className="w-6 h-6 text-blue-500" />,
+      description: "Global presence, local expertise"
+    },
+    { 
+      number: "24/7", 
+      label: "Support Available", 
+      icon: <Heart className="w-6 h-6 text-red-500" />,
+      description: "Always here when you need us"
     }
   ];
 
   return (
-    <section className="relative py-16 bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden">
-      {/* Lightweight background decoration */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-200 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-red-200 rounded-full blur-3xl"></div>
+    <section className="relative py-24 bg-gradient-to-br from-gray-50 via-blue-50/50 to-indigo-50/30 overflow-hidden">
+      {/* Enhanced background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-red-400/20 to-pink-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-emerald-400/10 to-teal-600/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4">
-        {/* Section Header */}
-        <div 
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Enhanced Section Header */}
+        <motion.div 
           ref={headerRef}
-          className={`text-center mb-12 transition-all duration-700 ${
-            headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 30 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8 }}
         >
-          <div className="inline-flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full border border-gray-200 mb-6">
-            <Star className="w-4 h-4 text-red-500" />
-            <span className="text-sm font-medium text-gray-600">Our Services</span>
-            <Star className="w-4 h-4 text-red-500" />
-          </div>
+          {/* Badge */}
+          <motion.div 
+            className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50 shadow-lg mb-8"
+            initial={{ scale: 0 }}
+            animate={headerInView ? { scale: 1 } : { scale: 0 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          >
+            <Sparkles className="w-5 h-5 text-red-500" />
+            <span className="font-semibold text-gray-700">Our Services</span>
+            <Sparkles className="w-5 h-5 text-red-500" />
+          </motion.div>
           
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+          {/* Main Title */}
+          <motion.h2 
+            className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
             Transform Your
-            <span className="text-red-500 block">Business Journey</span>
-          </h2>
+            <span className="block bg-gradient-to-r from-red-600 via-red-500 to-pink-600 bg-clip-text text-transparent">
+              Business Journey
+            </span>
+          </motion.h2>
           
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          {/* Subtitle */}
+          <motion.p 
+            className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
             Discover our comprehensive suite of services designed to accelerate your growth and connect you with exceptional opportunities.
-          </p>
+          </motion.p>
           
-          <div className="w-20 h-1 bg-red-500 mx-auto mt-6"></div>
-        </div>
+          {/* Decorative line */}
+          <motion.div 
+            className="w-24 h-1 bg-gradient-to-r from-red-500 to-pink-500 mx-auto mt-8 rounded-full"
+            initial={{ width: 0 }}
+            animate={headerInView ? { width: 96 } : { width: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          />
+        </motion.div>
 
-        {/* Cards Grid */}
-        {/* <div className="grid lg:grid-cols-3 gap-6">
-          {cards.map((card, i) => (
-            <ServiceCard key={i} card={card} index={i} />
-          ))}
-        </div> */}
-
-        {/* CTA Section */}
-        <div 
-          ref={ctaRef}
-          className={`text-center mt-12 transition-all duration-700 delay-300 ${
-            ctaInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+        {/* Enhanced Services Grid */}
+        <motion.div 
+          ref={servicesRef}
+          className="grid lg:grid-cols-3 gap-8 mb-20"
+          variants={containerVariants}
+          initial="hidden"
+          animate={servicesInView ? "visible" : "hidden"}
         >
-          <div className="bg-white/70 rounded-xl p-8 shadow-lg border border-gray-200 max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Shield className="w-5 h-5 text-green-500" />
-              <span className="text-sm font-medium text-gray-600">Trusted by 1000+ Companies</span>
-              <Shield className="w-5 h-5 text-green-500" />
-            </div>
+          {services.map((service, index) => (
+            <ServiceCard key={service.id} service={service} index={index} />
+          ))}
+        </motion.div>
+
+        {/* Enhanced CTA Section */}
+        <motion.div 
+          ref={ctaRef}
+          className="relative"
+          initial={{ opacity: 0, y: 30 }}
+          animate={ctaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-12 shadow-2xl border border-white/50 max-w-5xl mx-auto relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-blue-500/5"></div>
             
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Ready to Transform Your Business?
-            </h3>
-            
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Join thousands of satisfied clients who have accelerated their growth with our expert services.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-200 flex items-center justify-center gap-2">
-                Get Started Today
-                <ArrowRight className="w-4 h-4" />
-              </button>
+            <div className="relative z-10">
+              {/* Trust badge */}
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Shield className="w-6 h-6 text-green-500" />
+                <span className="font-semibold text-gray-700">Trusted by 1000+ Companies</span>
+                <Award className="w-6 h-6 text-yellow-500" />
+              </div>
               
-              <button className="bg-white hover:bg-gray-50 text-gray-700 px-8 py-3 rounded-full font-semibold border border-gray-300 transition-colors duration-200">
-                Learn More
-              </button>
+              <h3 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+                Ready to Transform Your Business?
+              </h3>
+              
+              <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto text-center leading-relaxed">
+                Join thousands of satisfied clients who have accelerated their growth with our expert services. Let's build something amazing together.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <Link 
+                  to='/employers' 
+                  className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-10 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                >
+                  <Zap className="w-5 h-5" />
+                  Get Started Today
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+                
+                <Link 
+                  to='/about' 
+                  className="inline-flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 px-10 py-4 rounded-2xl font-semibold text-lg border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 transform hover:scale-105"
+                >
+                  Learn More
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Success Metrics */}
-        <div 
+        {/* Enhanced Success Metrics */}
+        <motion.div 
           ref={metricsRef}
-          className={`grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 transition-all duration-700 delay-500 ${
-            metricsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-20"
+          variants={containerVariants}
+          initial="hidden"
+          animate={metricsInView ? "visible" : "hidden"}
         >
-          {[
-            { number: "98%", label: "Client Satisfaction", icon: "⭐" },
-            { number: "2.5K+", label: "Successful Placements", icon: "🎯" },
-            { number: "50+", label: "Countries Served", icon: "🌍" },
-            { number: "24/7", label: "Support Available", icon: "🚀" }
-          ].map((metric, index) => (
-            <div
+          {metrics.map((metric, index) => (
+            <motion.div
               key={index}
-              className="text-center bg-white/50 rounded-lg p-4 border border-gray-200 hover:bg-white/70 hover:shadow-md transition-all duration-200"
-              style={{ transitionDelay: `${index * 100}ms` }}
+              className="group text-center bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-white/50 hover:bg-white/80 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              variants={cardVariants}
+              whileHover={{ scale: 1.05 }}
             >
-              <div className="text-2xl mb-2">{metric.icon}</div>
-              <div className="text-xl font-bold text-gray-800">{metric.number}</div>
-              <div className="text-sm text-gray-600">{metric.label}</div>
-            </div>
+              <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                {metric.icon}
+              </div>
+              <div className="text-3xl font-bold text-gray-900 mb-2">{metric.number}</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">{metric.label}</div>
+              <div className="text-xs text-gray-500 leading-relaxed">{metric.description}</div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-// Separate component for individual service cards
-function ServiceCard({ card, index }) {
+// Enhanced Service Card Component
+function ServiceCard({ service, index }) {
   const [cardRef, cardInView] = useInView();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
+    <motion.div 
       ref={cardRef}
-      className={`group relative transition-all duration-700 ${
-        cardInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
-      style={{ transitionDelay: `${index * 200}ms` }}
+      className="group relative h-full"
+      variants={cardVariants}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
     >
-      <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-full">
+      <div className="bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-500 h-full flex flex-col relative">
         
-        {/* Image Section */}
-        <div className="relative h-48 overflow-hidden bg-gray-100">
+        {/* Hover overlay effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+        
+        {/* Image Section with Enhanced Effects */}
+        <div className="relative h-64 overflow-hidden">
           {!imageLoaded && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
           )}
-          <img
-            src={card.img}
-            alt={card.title}
-            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+          <motion.img
+            src={service.image}
+            alt={service.title}
+            className="w-full h-full object-cover"
             onLoad={() => setImageLoaded(true)}
             loading="lazy"
+            animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
+            transition={{ duration: 0.6 }}
+            style={{
+              opacity: imageLoaded ? 1 : 0,
+              transition: 'opacity 0.5s ease'
+            }}
           />
           
-          {/* Icon Badge */}
-          <div className={`absolute top-3 right-3 w-12 h-12 bg-gradient-to-r ${card.gradient} rounded-full flex items-center justify-center text-white shadow-lg`}>
-            {card.icon}
-          </div>
+          {/* Enhanced gradient overlay */}
+          <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent`}></div>
+          
+          {/* Floating Icon */}
+          <motion.div 
+            className={`absolute top-6 right-6 w-16 h-16 bg-gradient-to-br ${service.gradient} rounded-2xl flex items-center justify-center text-white shadow-lg backdrop-blur-sm`}
+            animate={isHovered ? { rotate: 360, scale: 1.1 } : { rotate: 0, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            {service.icon}
+          </motion.div>
 
           {/* Stats Badge */}
-          <div className="absolute bottom-3 left-3 bg-white/90 px-3 py-1 rounded-full text-sm font-semibold text-gray-800 shadow-md">
-            <TrendingUp className="w-3 h-3 inline mr-1 text-green-500" />
-            {card.stats}
+          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-green-500" />
+              <span className="text-sm font-bold text-gray-800">{service.stats}</span>
+            </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
-          <p className={`text-sm font-medium mb-2 bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent`}>
-            {card.subtitle}
-          </p>
+        {/* Content Section */}
+        <div className="p-8 flex-1 flex flex-col relative z-10">
+          <div className={`text-sm font-bold mb-3 bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent uppercase tracking-wider`}>
+            {service.subtitle}
+          </div>
 
-          <h3 className="text-xl font-bold mb-3 text-gray-800 group-hover:text-gray-900">
-            {card.title}
+          <h3 className="text-2xl font-bold mb-4 text-gray-900 group-hover:text-gray-700 transition-colors">
+            {service.title}
           </h3>
 
-          <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-            {card.description}
+          <p className="text-gray-600 mb-6 leading-relaxed flex-1">
+            {service.description}
           </p>
 
-          {/* Features */}
-          <div className="space-y-2 mb-6">
-            {card.features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm">
-                <div className={`w-1.5 h-1.5 bg-gradient-to-r ${card.gradient} rounded-full`}></div>
-                <span className="text-gray-700">{feature}</span>
-              </div>
+          {/* Enhanced Features */}
+          <div className="space-y-3 mb-8">
+            {service.features.map((feature, index) => (
+              <motion.div 
+                key={index} 
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, x: -20 }}
+                animate={cardInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                transition={{ delay: 0.1 * index, duration: 0.5 }}
+              >
+                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                <span className="text-gray-700 font-medium">{feature}</span>
+              </motion.div>
             ))}
           </div>
 
-          {/* CTA Button */}
-          <button className={`w-full bg-gradient-to-r ${card.gradient} text-white px-4 py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn`}>
-            Learn More
-            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" />
-          </button>
+          {/* Enhanced CTA Button */}
+          <Link
+            to={service.link}
+            className={`group/btn w-full bg-gradient-to-r ${service.gradient} text-white px-6 py-4 rounded-2xl font-semibold hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 transform hover:scale-105`}
+          >
+            <span>{service.ctaText}</span>
+            <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+          </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
