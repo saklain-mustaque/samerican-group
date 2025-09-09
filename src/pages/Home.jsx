@@ -8,7 +8,7 @@ import Testimonials from '../components/Testimonials'
 const Home = () => {
   return (
     <>
-      <Hero className="hero-home" />
+      <Hero className="hero-home" showGetStarted={true}/>
       <HomepageCards />
       <HomeSection />
       <FeaturedJobs />

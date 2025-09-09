@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { NavigationButton } from '../components/NavigationButton';
 import Hero from '../components/Hero';
 import { 
   Building2, 
@@ -31,7 +32,6 @@ const EmployersPage = () => {
   });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,7 +78,7 @@ const EmployersPage = () => {
       <Hero {...heroProps} />
 
       {/* Contact Form Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 to-black">
+      <section id='get-started-section' className="py-20 bg-gradient-to-br from-gray-900 to-black">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
@@ -649,14 +649,13 @@ const EmployersPage = () => {
               >
                 Get Started Today
               </motion.button>
-              <motion.button
-                onClick={() => navigate('/contact#contact-form')}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300 cursor-pointer"
+              <NavigationButton
+                to="/contact"
+                section="contact-form"
+                variant="secondary"
               >
                 Schedule a Call
-              </motion.button>
+              </NavigationButton>
             </div>
             <div className="mt-12 grid md:grid-cols-3 gap-8 text-center">
               <div className="flex flex-col items-center">

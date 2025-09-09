@@ -32,6 +32,7 @@ export default function Jobs() {
     subtitle: "Discover thousands of job opportunities from top companies. Search by location, industry, and experience level to find the perfect match for your career.",
     backgroundImage: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2084&q=80",
     showSearch: false,
+    showGetStarted: true,
     height: "h-96"
   };
 

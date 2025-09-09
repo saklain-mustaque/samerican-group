@@ -6,6 +6,7 @@ import {
   Facebook, Linkedin, Twitter, Instagram, ExternalLink
 } from 'lucide-react';
 import { useScrollOptimization } from '../hooks/useScrollOptimization';
+import { useEnhancedNavigation } from '../hooks/useEnhancedNavigation';
 
 export default function EnhancedNavbar() {
   const location = useLocation();
@@ -19,6 +20,7 @@ export default function EnhancedNavbar() {
   const dropdownRef = useRef(null);
   const lastScrollY = useRef(0);
   const { optimizedScrollHandler } = useScrollOptimization();
+  const { navigateToSection } = useEnhancedNavigation();
 
   // Enhanced contact info with better styling
   const contactInfo = [
@@ -101,10 +103,11 @@ export default function EnhancedNavbar() {
     { name: 'Contact', path: '/contact', description: 'Get in touch' }
   ];
 
-  // Scroll handling with enhanced behavior
+  // Enhanced scroll handling - always keep navbar visible
   useEffect(() => {
     const handleScroll = ({ scrollY, direction }) => {
-      setIsVisible(true); // Always show navbar for better UX
+      // Always keep navbar visible for better UX
+      setIsVisible(true);
       setScrolled(scrollY > 20);
       lastScrollY.current = scrollY;
     };
@@ -152,6 +155,18 @@ export default function EnhancedNavbar() {
     });
   };
 
+  // Enhanced navigation handler
+  const handleNavigationClick = (e, path, sectionId = null) => {
+    e.preventDefault();
+    
+    // Close mobile menu
+    setIsOpen(false);
+    setMobileIndustriesOpen(false);
+    
+    // Navigate with section support
+    navigateToSection(path, sectionId);
+  };
+
   // Enhanced dropdown handling
   const handleIndustriesMouseEnter = () => {
     if (hoverTimeout) {
@@ -188,7 +203,7 @@ export default function EnhancedNavbar() {
     <motion.header
       className="fixed w-full top-0 left-0 z-50"
       initial={{ y: -100 }}
-      animate={{ y: isVisible ? 0 : -100 }}
+      animate={{ y: 0 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
       {/* Enhanced Top Bar */}
@@ -206,6 +221,7 @@ export default function EnhancedNavbar() {
                   href={contact.href}
                   className="flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors duration-200 group"
                   title={contact.label}
+                  aria-label={contact.label}
                 >
                   <span className="text-red-400 group-hover:text-red-300 transition-colors">
                     {contact.icon}
@@ -223,6 +239,7 @@ export default function EnhancedNavbar() {
                   href={social.href}
                   className={`w-8 h-8 bg-white/10 backdrop-blur-sm ${social.color} rounded-lg flex items-center justify-center transition-all duration-200 border border-white/20 hover:border-white/40`}
                   title={social.name}
+                  aria-label={`Follow us on ${social.name}`}
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -243,7 +260,12 @@ export default function EnhancedNavbar() {
           <div className="flex justify-between items-center h-20">
 
             {/* Enhanced Logo */}
-            <Link to="/" className="flex items-center group">
+            <Link 
+              to="/" 
+              className="flex items-center group"
+              onClick={(e) => handleNavigationClick(e, '/')}
+              aria-label="Samerican Group - Home"
+            >
               <motion.div
                 className="flex items-center"
                 whileHover={{ scale: 1.02 }}
@@ -258,12 +280,13 @@ export default function EnhancedNavbar() {
             </Link>
 
             {/* Enhanced Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-2">
+            <nav className="hidden lg:flex items-center space-x-2" role="navigation" aria-label="Main navigation">
               {navigationLinks.map((link, idx) =>
                 !link.isDropdown ? (
                   <Link
                     key={idx}
                     to={link.path}
+                    onClick={(e) => handleNavigationClick(e, link.path)}
                     className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 group ${scrolled
                         ? isActivePath(link.path)
                           ? 'text-red-600 bg-red-50'
@@ -272,6 +295,7 @@ export default function EnhancedNavbar() {
                           ? 'text-gray-700 bg-white'
                           : 'text-white hover:text-red-400'
                       }`}
+                    aria-label={`Navigate to ${link.name} page`}
                   >
                     <span className="relative z-10">{link.name}</span>
 
@@ -295,34 +319,37 @@ export default function EnhancedNavbar() {
                   >
                     <div className="flex items-center">
                       <Link
-                    to={link.path}
-                    className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 group ${scrolled
-                        ? isActivePath(link.path)
-                          ? 'text-red-600 bg-red-50'
-                          : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
-                        : isActivePath(link.path)
-                          ? 'text-gray-700 bg-white'
-                          : 'text-white hover:text-red-400'
-                      }`}
-                  >
-                    <span className="relative z-10">{link.name}</span>
-
-                    {isActivePath(link.path) && (
-                      <motion.div
-                        className={`absolute inset-0 rounded-xl ${scrolled ? 'bg-red-100' : 'bg-white'
+                        to={link.path}
+                        onClick={(e) => handleNavigationClick(e, link.path)}
+                        className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 group ${scrolled
+                            ? isActivePath(link.path)
+                              ? 'text-red-600 bg-red-50'
+                              : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
+                            : isActivePath(link.path)
+                              ? 'text-gray-700 bg-white'
+                              : 'text-white hover:text-red-400'
                           }`}
-                        layoutId="activeTab"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
-                  </Link>
+                        aria-label={`Navigate to ${link.name} page`}
+                      >
+                        <span className="relative z-10">{link.name}</span>
+
+                        {isActivePath(link.path) && (
+                          <motion.div
+                            className={`absolute inset-0 rounded-xl ${scrolled ? 'bg-red-100' : 'bg-white'
+                              }`}
+                            layoutId="activeTab"
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          />
+                        )}
+                      </Link>
 
                       <button
                         onClick={handleIndustriesClick}
                         className={`${scrolled ? 'text-gray-700 hover:text-red-600' : 'text-white hover:text-red-400'
-                          } transition-colors duration-200 focus:outline-none`}
-
+                          } transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 rounded-md p-1`}
                         aria-expanded={industriesOpen}
+                        aria-haspopup="true"
+                        aria-label="Show industries dropdown menu"
                       >
                         <ChevronDown
                           className={`w-4 h-4 transition-transform duration-200 ${industriesOpen ? 'rotate-180' : ''
@@ -343,6 +370,8 @@ export default function EnhancedNavbar() {
                           transition={{ duration: 0.2 }}
                           onMouseEnter={handleIndustriesMouseEnter}
                           onMouseLeave={handleIndustriesMouseLeave}
+                          role="menu"
+                          aria-label="Industries submenu"
                         >
                           <div className="p-6">
                             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
@@ -353,10 +382,14 @@ export default function EnhancedNavbar() {
                                 <Link
                                   key={subIdx}
                                   to={sublink.path}
-                                  className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 group"
-                                  onClick={() => setIndustriesOpen(false)}
+                                  onClick={(e) => {
+                                    handleNavigationClick(e, sublink.path);
+                                    setIndustriesOpen(false);
+                                  }}
+                                  className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                                  role="menuitem"
+                                  aria-label={`Navigate to ${sublink.name} industry page`}
                                 >
-                                  {/* <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" /> */}
                                   <span className="font-medium">{sublink.name}</span>
                                 </Link>
                               ))}
@@ -372,20 +405,24 @@ export default function EnhancedNavbar() {
 
             {/* Enhanced CTA Button */}
             <div className="hidden lg:block">
-              <Link
-                to="/contact"
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2"
+              <button
+                onClick={(e) => handleNavigationClick(e, '/contact', 'contact-form')}
+                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                aria-label="Get started - Navigate to contact form"
               >
                 <span>Get Started</span>
-                {/* <ExternalLink className="w-4 h-4" />f */}
-              </Link>
+              </button>
             </div>
 
             {/* Enhanced Mobile Menu Button */}
             <button
-              className="lg:hidden p-2  hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
+              className={`lg:hidden p-2 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
+                scrolled ? 'text-gray-700' : 'text-white'
+              }`}
               onClick={toggleMobileMenu}
-              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
             >
               <motion.div
                 animate={{ rotate: isOpen ? 180 : 0 }}
@@ -402,50 +439,55 @@ export default function EnhancedNavbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.nav
+            id="mobile-menu"
             className="lg:hidden bg-white/95 backdrop-blur-xl shadow-2xl border-t border-gray-200/50"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
+            role="navigation"
+            aria-label="Mobile navigation"
           >
             <div className="max-h-[70vh] overflow-y-auto px-6 py-6">
               <div className="space-y-2">
                 {navigationLinks.map((link, idx) =>
                   !link.isDropdown ? (
-                    <Link
+                    <button
                       key={idx}
-                      to={link.path}
-                      className={`block px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${isActivePath(link.path)
+                      onClick={(e) => handleNavigationClick(e, link.path)}
+                      className={`w-full text-left block px-4 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${isActivePath(link.path)
                         ? 'text-red-600 bg-red-50'
                         : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
                         }`}
-                      onClick={toggleMobileMenu}
+                      aria-label={`Navigate to ${link.name} page`}
                     >
                       <div>
                         <div>{link.name}</div>
                         <div className="text-sm text-gray-500 mt-1">{link.description}</div>
                       </div>
-                    </Link>
+                    </button>
                   ) : (
                     <div key={idx} className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <Link
-                          to={link.path}
-                          className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${isActivePath(link.path)
+                        <button
+                          onClick={(e) => handleNavigationClick(e, link.path)}
+                          className={`flex-1 text-left px-4 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${isActivePath(link.path)
                             ? 'text-red-600 bg-red-50'
                             : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
                             }`}
-                          onClick={toggleMobileMenu}
+                          aria-label={`Navigate to ${link.name} page`}
                         >
                           <div>
                             <div>{link.name}</div>
                             <div className="text-sm text-gray-500 mt-1">{link.description}</div>
                           </div>
-                        </Link>
+                        </button>
 
                         <button
-                          className="p-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
+                          className="p-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                           onClick={() => setMobileIndustriesOpen(!mobileIndustriesOpen)}
+                          aria-expanded={mobileIndustriesOpen}
+                          aria-label="Show industries submenu"
                         >
                           <ChevronDown
                             className={`w-5 h-5 transition-transform duration-200 ${mobileIndustriesOpen ? 'rotate-180' : ''
@@ -464,14 +506,14 @@ export default function EnhancedNavbar() {
                             transition={{ duration: 0.2 }}
                           >
                             {link.subLinks.map((sublink, subIdx) => (
-                              <Link
+                              <button
                                 key={subIdx}
-                                to={sublink.path}
-                                className="block px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-                                onClick={toggleMobileMenu}
+                                onClick={(e) => handleNavigationClick(e, sublink.path)}
+                                className="w-full text-left block px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                                aria-label={`Navigate to ${sublink.name} industry page`}
                               >
                                 {sublink.name}
-                              </Link>
+                              </button>
                             ))}
                           </motion.div>
                         )}
@@ -483,14 +525,13 @@ export default function EnhancedNavbar() {
 
               {/* Mobile CTA */}
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <Link
-                  to="/contact"
-                  className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
-                  onClick={toggleMobileMenu}
+                <button
+                  onClick={(e) => handleNavigationClick(e, '/contact', 'contact-form')}
+                  className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                  aria-label="Get started - Navigate to contact form"
                 >
                   <span>Get Started</span>
-                  {/* <ExternalLink className="w-4 h-4" /> */}
-                </Link>
+                </button>
               </div>
             </div>
           </motion.nav>

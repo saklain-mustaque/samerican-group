@@ -5,15 +5,21 @@ import { ArrowUp } from 'lucide-react';
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     let scrollTimeout;
 
     const handleScroll = () => {
       const scrollY = window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min((scrollY / documentHeight) * 100, 100);
       
       // Show button after scrolling 400px
       setIsVisible(scrollY > 400);
+      
+      // Update scroll progress for the progress indicator
+      setScrollProgress(progress);
       
       // Track scrolling state for visual feedback
       setIsScrolling(true);
@@ -23,6 +29,7 @@ const BackToTop = () => {
       }, 150);
     };
 
+    // Optimized scroll handler with passive listeners
     let ticking = false;
     const optimizedScrollHandler = () => {
       if (!ticking) {
@@ -49,11 +56,20 @@ const BackToTop = () => {
     const duration = 800; // Smooth scroll duration
     let startTime = null;
 
+    // Announce to screen readers
+    const announcer = document.createElement('div');
+    announcer.setAttribute('aria-live', 'polite');
+    announcer.setAttribute('aria-atomic', 'true');
+    announcer.className = 'sr-only';
+    announcer.textContent = 'Scrolling to top of page';
+    document.body.appendChild(announcer);
+
     const animateScroll = (currentTime) => {
       if (startTime === null) startTime = currentTime;
       const timeElapsed = currentTime - startTime;
       const progress = Math.min(timeElapsed / duration, 1);
       
+      // Easing function for smooth animation
       const easeOutCubic = progress => 1 - Math.pow(1 - progress, 3);
       const currentPosition = startPosition * (1 - easeOutCubic(progress));
       
@@ -61,6 +77,17 @@ const BackToTop = () => {
 
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
+      } else {
+        // Clean up announcer
+        setTimeout(() => {
+          if (document.body.contains(announcer)) {
+            document.body.removeChild(announcer);
+          }
+        }, 1000);
+        
+        // Focus management for accessibility
+        const mainElement = document.querySelector('main') || document.body;
+        mainElement.focus({ preventScroll: true });
       }
     };
 
@@ -98,12 +125,20 @@ const BackToTop = () => {
             ease: "easeInOut"
           }}
           onClick={scrollToTop}
-          className={`fixed bottom-6 right-6 z-40 p-3 rounded-full shadow-lg transition-all duration-200 ${
+          className={`fixed bottom-6 right-6 z-40 p-3 md:p-4 rounded-full shadow-lg transition-all duration-200 ${
             isScrolling 
               ? 'bg-red-600/90 text-white' 
               : 'bg-red-600 text-white hover:bg-red-700'
-          } backdrop-blur-sm border border-white/10`}
-          aria-label="Scroll to top"
+          } backdrop-blur-sm border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50`}
+          style={{
+            // Ensure proper positioning on mobile devices
+            position: 'fixed',
+            transform: 'translate3d(0, 0, 0)', // Force hardware acceleration
+            WebkitTransform: 'translate3d(0, 0, 0)',
+            willChange: 'transform, opacity'
+          }}
+          aria-label="Scroll to top of page"
+          title="Back to top"
         >
           <motion.div
             animate={{ 
@@ -114,7 +149,7 @@ const BackToTop = () => {
               ease: "easeInOut"
             }}
           >
-            <ArrowUp size={20} />
+            <ArrowUp size={window.innerWidth < 768 ? 18 : 20} />
           </motion.div>
 
           {/* Ripple effect on hover */}
@@ -131,12 +166,14 @@ const BackToTop = () => {
             }}
           />
           
-          {/* Progress ring indicator */}
+          {/* Enhanced progress ring indicator */}
           <svg
             className="absolute inset-0 w-full h-full -rotate-90"
             viewBox="0 0 36 36"
+            style={{ overflow: 'visible' }}
           >
-            <motion.circle
+            {/* Background circle */}
+            <circle
               cx="18"
               cy="18"
               r="16"
@@ -144,6 +181,7 @@ const BackToTop = () => {
               stroke="rgba(255, 255, 255, 0.2)"
               strokeWidth="2"
             />
+            {/* Progress circle */}
             <motion.circle
               cx="18"
               cy="18"
@@ -153,13 +191,17 @@ const BackToTop = () => {
               strokeWidth="2"
               strokeLinecap="round"
               strokeDasharray="100 100"
-              initial={{ strokeDashoffset: 100 }}
-              animate={{ 
-                strokeDashoffset: Math.max(0, 100 - (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100)
-              }}
-              transition={{ duration: 0.1 }}
+              strokeDashoffset={100 - scrollProgress}
+              transition={{ duration: 0.1, ease: "easeOut" }}
             />
           </svg>
+
+          {/* Mobile-specific touch target enhancement */}
+          <div 
+            className="absolute inset-0 rounded-full -m-2 md:m-0"
+            style={{ minWidth: '44px', minHeight: '44px' }} // WCAG touch target size
+            aria-hidden="true"
+          />
         </motion.button>
       )}
     </AnimatePresence>

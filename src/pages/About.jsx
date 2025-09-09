@@ -17,6 +17,7 @@ const AboutPage = () => {
     subtitle: "Connecting exceptional talent with innovative companies worldwide since 2008",
     backgroundImage: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1950&q=80",
     showButtons: true,
+    showGetStarted: true,
     className: "hero-about"
   };
 

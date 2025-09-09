@@ -1,5 +1,46 @@
 @import "tailwindcss";
 
+/* Screen reader only class for accessibility */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip to content link for keyboard navigation */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 999;
+  transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+  top: 6px;
+}
+
+/* Focus styles for better accessibility */
+/* :focus {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+.focus\:ring-red-500:focus {
+  --tw-ring-color: rgb(239 68 68 / 0.5);
+} */
+
 /* Prevent horizontal overflow and ensure proper viewport width */
 html, body {
   width: 100%;

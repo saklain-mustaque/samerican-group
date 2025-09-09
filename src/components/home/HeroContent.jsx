@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search, MapPin, ArrowRight, Briefcase, Users, TrendingUp, Star } from "lucide-react";
 import { AnimatedSection, FloatingElement } from "./AnimationUtils";
 import FeatureList from "./FeatureList";
+import { NavigationButton } from '../NavigationButton.jsx';
 
 export const HeroContent = ({ activeTab, jobSeekerFeatures, employerFeatures }) => {
 
@@ -169,16 +170,13 @@ export const HeroContent = ({ activeTab, jobSeekerFeatures, employerFeatures }) 
 							</h1>
 
 							<div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white/20">
-								<Link to="/employers">
-									<motion.button
-										whileHover={{ scale: 1.02, y: -2 }}
-										whileTap={{ scale: 0.98 }}
-										className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-3"
-									>
-										Request Talent
-										<ArrowRight className="w-5 h-5" />
-									</motion.button>
-								</Link>
+								<NavigationButton
+									to="/employers"
+									section="get-started-section"
+									className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer"
+								>
+									Request Talent
+								</NavigationButton>
 							</div>
 						</AnimatedSection>
 
@@ -237,16 +235,13 @@ export const HeroContent = ({ activeTab, jobSeekerFeatures, employerFeatures }) 
 							</AnimatedSection>
 						</div>
 
-						<Link to="/employers">
-							<motion.button
-								whileHover={{ scale: 1.05, y: -2 }}
-								whileTap={{ scale: 0.95 }}
-								className="bg-gradient-to-r from-red-500 to-red-600 text-white px-12 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-3"
-							>
-								Request Talent
-								<ArrowRight className="w-5 h-5" />
-							</motion.button>
-						</Link>
+						<NavigationButton
+									to="/employers"
+									section="get-started-section"
+									className="bg-gradient-to-r from-red-500 to-red-600 text-white px-12 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-3 cursor-pointer"
+								>
+							Request Talent
+						</NavigationButton>
 					</AnimatedSection>
 				</motion.div>
 			)}

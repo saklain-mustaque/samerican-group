@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play, CheckCircle, Star, TrendingUp } from "lucide-react";
+import { NavigationButton } from './NavigationButton.jsx';
 
 // Industry-specific background images with better quality and composition
 const industryBackgrounds = {
@@ -50,6 +51,7 @@ const Hero = ({
   description = null,
   backgroundImage = null,
   showButtons = true,
+  showGetStarted = false,
   showStats = false,
   showVideo = false,
   industryId = null,
@@ -211,12 +213,13 @@ const Hero = ({
                   </button>
                 )}
 
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-3 bg-transparent hover:bg-white/10 text-white border-2 border-white/30 hover:border-white/60 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300"
-                >
-                  Get Started
-                </Link>
+                {showGetStarted && <NavigationButton
+									to="/employers"
+									section="get-started-section"
+									className="inline-flex items-center gap-3 bg-transparent hover:bg-white/10 text-white border-2 border-white/30 hover:border-white/60 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300"
+								>
+									Get Started
+								</NavigationButton>}
               </motion.div>
             )}
 

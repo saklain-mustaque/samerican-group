@@ -21,6 +21,7 @@ const ServicesPage = () => {
     subtitle: "Comprehensive talent solutions tailored to your business needs",
     backgroundImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1950&q=80",
     showButtons: true,
+    showGetStarted: true,
     className: "hero-services"
   };
 
