@@ -5,7 +5,6 @@ import { AnimatedSection } from "./home/AnimationUtils";
 import HeroContent from "./home/HeroContent";
 import StatsSection from "./home/StatsSection";
 import ClientsGrid from "./home/ClientsGrid";
-import FooterContent from "./home/FooterContent";
 
 export default function HomeSection() {
   const [activeTab, setActiveTab] = useState("jobseekers");
@@ -144,7 +143,6 @@ export default function HomeSection() {
         </div>
       </section>
 
-      {/* <FooterContent /> */}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import {
   Menu, X, ChevronDown, Phone, Mail, MapPin,
   Facebook, Linkedin, Twitter, Instagram, ExternalLink
 } from 'lucide-react';
-import { useScrollOptimization } from '../hooks/useScrollOptimization';
+import { useScrollOptimization } from '../hooks/useScrollOptimization.js';
 import { useEnhancedNavigation } from '../hooks/useEnhancedNavigation';
 
 export default function EnhancedNavbar() {

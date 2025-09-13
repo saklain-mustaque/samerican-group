@@ -107,13 +107,3 @@ export const useScrollOptimization = () => {
 
   return { optimizedScrollHandler };
 };
-
-// Hook for detecting mobile devices
-export const useIsMobile = () => {
-  const checkIsMobile = useCallback(() => {
-    return window.innerWidth < 768 || 
-           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }, []);
-
-  return checkIsMobile();
-};

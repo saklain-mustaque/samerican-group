@@ -2,8 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, MapPin, ArrowRight, Briefcase, Users, TrendingUp, Star } from "lucide-react";
-import { AnimatedSection, FloatingElement } from "./AnimationUtils";
-import FeatureList from "./FeatureList";
+import { AnimatedSection, FloatingElement } from "./AnimationUtils.jsx";
+import FeatureList from "./FeatureList.jsx";
 import { NavigationButton } from '../NavigationButton.jsx';
 
 export const HeroContent = ({ activeTab, jobSeekerFeatures, employerFeatures }) => {

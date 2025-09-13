@@ -11,14 +11,7 @@ node_modules
 dist-ssr
 *.local
 
-# Specific components
-src/data/
-src/hooks/useScrollSpy.js
-src/components/Services.jsx
-src/components/About.jsx
-src/components/Testimonials.jsx
-src/components/Contact.jsx
-src/components/Footer.jsx
+*.md
 
 # Editor directories and files
 .vscode/*

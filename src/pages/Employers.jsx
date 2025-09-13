@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { NavigationButton } from '../components/NavigationButton';
+import { NavigationButton } from '../components/NavigationButton.jsx';
 import Hero from '../components/Hero';
 import { 
   Building2, 
